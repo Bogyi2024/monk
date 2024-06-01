@@ -1,4 +1,4 @@
-name: Windows - RustDesk
+name: Windows - H2S
 
 on:
   workflow_dispatch:
