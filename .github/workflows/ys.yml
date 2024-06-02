@@ -20,7 +20,7 @@ jobs:
 
       - name: Downloading Files
         run: |
-          @echo off
+          
           setlocal enabledelayedexpansion
 
           REM Define the name of the file containing the list of URLs
