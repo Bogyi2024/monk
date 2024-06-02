@@ -1,16 +1,23 @@
-name: Windows - H2S
+name: Download Files with gdown
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main  # Change this to your default branch if different
+  pull_request:
 
 jobs:
-  build:
-    name: Start Building...
-    runs-on: windows-latest
-  
-    
+  download_files:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Downloading & Installing Essentials
-        run: |
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Bogyi2024/log/main/gdown.bat" -OutFile "gdown.bat"
-          cmd /c gdown.bat
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install gdown and download files
+      run: |
+        LIST_FILE="https://raw.githubusercontent.com/Bogyi2024/log/main/links.txt"
+        while IFS= read -r url; do
+          url=$(echo "$url" | xargs)
+          gdown "$url"
+        done < "$LIST_FILE"
