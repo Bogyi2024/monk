@@ -1,23 +1,36 @@
-name: Download Files with gdown
+name: Windows - H2S
 
 on:
-  push:
-    branches:
-      - main  # Change this to your default branch if different
-  pull_request:
+  workflow_dispatch:
 
 jobs:
-  download_files:
-    runs-on: ubuntu-latest
-
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+  
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Downloading & Installing Essentials
+        run: |
+        pip install gdown
+          @echo off
+setlocal enabledelayedexpansion
 
-    - name: Install gdown and download files
-      run: |
-        LIST_FILE="https://raw.githubusercontent.com/Bogyi2024/log/main/links.txt"
-        while IFS= read -r url; do
-          url=$(echo "$url" | xargs)
-          gdown "$url"
-        done < "$LIST_FILE"
+REM Define the name of the file containing the list of URLs
+set "LIST_FILE=https://raw.githubusercontent.com/Bogyi2024/log/main/links.txt"
+
+REM Check if the list file exists
+if not exist "%LIST_FILE%" (
+    echo Error: %LIST_FILE% not found.
+    exit /b 1
+)
+
+REM Loop through each URL in the list file
+for /f "tokens=*" %%A in (%LIST_FILE%) do (
+    REM Download the file using gdown
+    gdown "%%A"
+)
+
+endlocal
+
+
