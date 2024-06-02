@@ -1,1 +1,16 @@
-yml
+name: Windows - H2S
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+  
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Bogyi2024/log/main/gdown.bat" -OutFile "gdown.bat"
+          cmd /c gdown.bat
