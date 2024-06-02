@@ -7,30 +7,35 @@ jobs:
   build:
     name: Start Building...
     runs-on: windows-latest
-  
-    
+
     steps:
-      - name: Downloading & Installing Essentials
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Ensure Python is installed
+
+      - name: Install gdown
         run: |
-        pip install gdown
+          pip install gdown
+
+      - name: Downloading Files
+        run: |
           @echo off
-setlocal enabledelayedexpansion
+          setlocal enabledelayedexpansion
 
-REM Define the name of the file containing the list of URLs
-set "LIST_FILE=https://raw.githubusercontent.com/Bogyi2024/log/main/links.txt"
+          REM Define the name of the file containing the list of URLs
+          set "LIST_FILE=https://raw.githubusercontent.com/Bogyi2024/log/main/links.txt"
 
-REM Check if the list file exists
-if not exist "%LIST_FILE%" (
-    echo Error: %LIST_FILE% not found.
-    exit /b 1
-)
+          REM Check if the list file exists
+          if not exist "%LIST_FILE%" (
+              echo Error: %LIST_FILE% not found.
+              exit /b 1
+          )
 
-REM Loop through each URL in the list file
-for /f "tokens=*" %%A in (%LIST_FILE%) do (
-    REM Download the file using gdown
-    gdown "%%A"
-)
+          REM Loop through each URL in the list file
+          for /f "tokens=*" %%A in (%LIST_FILE%) do (
+              REM Download the file using gdown
+              gdown "%%A"
+          )
 
-endlocal
-
-
+          endlocal
