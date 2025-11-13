@@ -1,34 +1,44 @@
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
-    # Assumes you commit the 'downloadapp.py' file to your repository root
+name: Ubuntu - Rapidgator1
 
-  - name: Set up Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.x' 
-  
-  - name: Install Dependencies
-    run: |
-      # Install Python libraries
-      pip install requests gdown mediafire-dl
+on:
+  workflow_dispatch:
 
-  - name: Install aria2 (Windows)
-    # aria2 is often pre-installed or easily available on GitHub runners
-    # This step ensures it's available in the PATH if needed.
-    run: |
-      choco install aria2 --yes
-
-  - name: Execute Download Script Securely
-    # Pass secrets as environment variables (env:) to the script
-    env:
-      RG_EMAIL: ${{ secrets.RG_EMAIL }}
-      RG_PASSWORD: ${{ secrets.RG_PASSWORD }}
-      KATFILE_KEY: ${{ secrets.KATFILE_KEY }}
-      RG_2FA: ${{ secrets.RG_2FA }} # Optional
-      # Use secrets for the pastebin link if you want to change it without editing the file
-      PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }} 
+jobs:
+  build:
+    name: Start Building...
+    runs-on: ubuntu-latest
+# 'steps:' must be indented under the 'download:' job
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        # This action checks out your repository, making 'downloadapp.py' available
+    
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' 
       
-    run: |
-      # The script reads these variables automatically via os.environ.get()
-      cmd python downloadapp.py
+      - name: Install Dependencies
+        run: |
+          # Install Python libraries needed by your script
+          pip install requests gdown mediafire-dl
+    
+      - name: Install aria2 (Ubuntu)
+        # Use apt-get for Ubuntu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y aria2
+    
+      - name: Execute Download Script Securely
+        # Pass secrets as environment variables (env:) to the script
+        env:
+          RG_EMAIL: ${{ secrets.RG_EMAIL }}
+          RG_PASSWORD: ${{ secrets.RG_PASSWORD }}
+          KATFILE_KEY: ${{ secrets.KATFILE_KEY }}
+          RG_2FA: ${{ secrets.RG_2FA }} # Optional
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }} 
+          
+        run: |
+          # The script reads these variables automatically via os.environ.get()
+          # Use 'python3' or 'python' on Linux
+          python3 downloadapp.py
