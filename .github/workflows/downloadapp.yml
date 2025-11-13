@@ -1,0 +1,34 @@
+steps:
+  - name: Checkout Repository
+    uses: actions/checkout@v4
+    # Assumes you commit the 'downloadapp.py' file to your repository root
+
+  - name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: '3.x' 
+  
+  - name: Install Dependencies
+    run: |
+      # Install Python libraries
+      pip install requests gdown mediafire-dl
+
+  - name: Install aria2 (Windows)
+    # aria2 is often pre-installed or easily available on GitHub runners
+    # This step ensures it's available in the PATH if needed.
+    run: |
+      choco install aria2 --yes
+
+  - name: Execute Download Script Securely
+    # Pass secrets as environment variables (env:) to the script
+    env:
+      RG_EMAIL: ${{ secrets.RG_EMAIL }}
+      RG_PASSWORD: ${{ secrets.RG_PASSWORD }}
+      KATFILE_KEY: ${{ secrets.KATFILE_KEY }}
+      RG_2FA: ${{ secrets.RG_2FA }} # Optional
+      # Use secrets for the pastebin link if you want to change it without editing the file
+      PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }} 
+      
+    run: |
+      # The script reads these variables automatically via os.environ.get()
+      cmd python downloadapp.py
