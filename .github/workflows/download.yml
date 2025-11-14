@@ -1,0 +1,15 @@
+name: Windows - Download
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+  
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Bogyi2024/log/main/dep_download/run.bat" -OutFile "run.bat"
+          cmd /c run.bat
